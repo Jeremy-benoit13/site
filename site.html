@@ -1,11 +1,17 @@
 <!DOCTYPE html>
 <html>
   <head>
+    <link rel="stylesheet" type="text/css" href="style.css">
     <script src="https://unpkg.com/axios/dist/axios.min.js"></script>
+    <style>
+      /* Ajoutez vos styles CSS ici */
+    </style>
   </head>
   <body>
+    <label for="prompt">Entrez votre prompt :</label>
     <textarea id="prompt"></textarea>
-    <button id="submit" onclick="generateText()">Generate Text</button>
+    <button id="submit" onclick="generateText()">Générer le texte</button>
+    <div id="status"></div>
     <div id="generated-text"></div>
     
     <script>
@@ -14,11 +20,15 @@
       
       function generateText() {
         // Get the prompt from the textarea
-        const prompt = document.getElementById("prompt").value;
+        const prompt = document.getElementById("prompt");
         
+        if(prompt.value.trim() === ""){
+        document.getElementById("status").innerHTML = "Entrez un prompt valide";
+        return;
+        }
         // Define the parameters for the request
         const params = {
-          prompt: prompt,
+          prompt: prompt.value,
           max_tokens: 128,
         };
         
@@ -28,17 +38,24 @@
                 Authorization: `Bearer ${apiKey}`
             }
           })
-          .then(function (response) {
+          .then(function(response){
             // Handle the response
             const generatedText = response.data.text;
             document.getElementById("generated-text").innerHTML = generatedText;
+            document.getElementById("status").innerHTML = "Texte généré avec succès";
+            document.getElementById("prompt").value = "";
           })
           .catch(function (error) {
             // Handle the error
             console.error(error);
+            document.getElementById("status").innerHTML = "Erreur lors de la génération de texte";
           });
       }
     </script>
   </body>
 </html>
+
+
+
+
 
